@@ -2,11 +2,10 @@ function statement(invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
-  
   totalAmount = getTotalAmount(invoice, plays, totalAmount);
   result = getLineResult(invoice, plays, result);
-  volumeCredits = getVolumeCredits(invoice, plays, volumeCredits);
   result += `Amount owed is ${formatUsd(totalAmount)}\n`;
+  volumeCredits = getVolumeCredits(invoice, plays, volumeCredits);
   result += `You earned ${volumeCredits} credits \n`;
   return result;
 }
@@ -60,7 +59,6 @@ function getVolumeCredits(invoice, plays, volumeCredits) {
 function getCredit(perf, play) {
   let credit = 0;
   credit += Math.max(perf.audience - 30, 0);
-  // add extra credit for every ten comedy attendees
   if ('comedy' === play.type)
     credit += Math.floor(perf.audience / 5);
   return credit;

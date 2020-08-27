@@ -155,3 +155,29 @@ test('should return owed 1730 and 47 earned when statement given all performance
     'Amount owed is $1,730.00\n' +
     'You earned 47 credits \n');
 })
+test('should throw exception when statement given unknown plays', t => {
+  //given
+  const plays = {
+    'othello': {
+      'name': 'Othello',
+      'type': 'tragedy1',
+    },
+  };
+  const invoice = {
+    'customer': 'BigCo',
+    'performances': [
+      {
+        'playID': 'othello',
+        'audience': 40,
+      },
+    ],
+  };
+  
+  try {
+    statement(invoice, plays);
+    t.fail();
+  }
+  catch (e) {
+    t.is(e.message, 'unknown type: tragedy1');
+  }
+})
