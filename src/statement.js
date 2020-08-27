@@ -1,28 +1,28 @@
 function statement(invoice, plays) {
-  let totalAmount = getTotalAmount(invoice, plays);
-  let volumeCredits = getVolumeCredits(invoice, plays);
-  let result = getResult(invoice, plays, totalAmount, volumeCredits);
+  let totalAmount = calculateTotalAmount(invoice, plays);
+  let volumeCredits = calculateVolumeCredits(invoice, plays);
+  let result = generateResult(invoice, plays, totalAmount, volumeCredits);
   return result;
 }
-function getResult(invoice, plays, totalAmount, volumeCredits) {
+function generateResult(invoice, plays, totalAmount, volumeCredits) {
   let result = `Statement for ${invoice.customer}\n`;
-  result = getLineResult(invoice, plays, result);
+  result = generateLineResult(invoice, plays, result);
   result += `Amount owed is ${formatUsd(totalAmount)}\n`;
   result += `You earned ${volumeCredits} credits \n`;
   return result;
 }
 
-function getTotalAmount(invoice, plays) {
+function calculateTotalAmount(invoice, plays) {
   let totalAmount = 0;
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
-    const thisAmount = getAmount(play, perf);
+    const thisAmount = calculateAmount(play, perf);
     totalAmount += thisAmount;
   }
   return totalAmount;
 }
 
-function getAmount(play, perf) {
+function calculateAmount(play, perf) {
   switch (play.type) {
     case 'tragedy':
       thisAmount = 40000;
@@ -43,25 +43,25 @@ function getAmount(play, perf) {
   return thisAmount;
 }
 
-function getLineResult(invoice, plays, result) {
+function generateLineResult(invoice, plays, result) {
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
-    const thisAmount = getAmount(play, perf);
+    const thisAmount = calculateAmount(play, perf);
     result += ` ${play.name}: ${formatUsd(thisAmount)} (${perf.audience} seats)\n`;
   }
   return result;
 }
 
-function getVolumeCredits(invoice, plays) {
+function calculateVolumeCredits(invoice, plays) {
   let volumeCredits = 0;
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
-    volumeCredits += getCredit(perf, play);
+    volumeCredits += caculateCredit(perf, play);
   }
   return volumeCredits;
 }
 
-function getCredit(perf, play) {
+function caculateCredit(perf, play) {
   let credit = 0;
   credit += Math.max(perf.audience - 30, 0);
   if ('comedy' === play.type)
