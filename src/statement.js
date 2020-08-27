@@ -6,34 +6,42 @@ function statement(invoice, plays) {
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
     const thisAmount = getAmount(play, perf);
-    result += ` ${play.name}: ${formatUsd(thisAmount)} (${perf.audience} seats)\n`;
     totalAmount += thisAmount;
   }
+  result = getLineResult(invoice, plays, result);
   volumeCredits = getVolumeCredits(invoice, plays, volumeCredits);
   result += `Amount owed is ${formatUsd(totalAmount)}\n`;
   result += `You earned ${volumeCredits} credits \n`;
   return result;
-
-  function getAmount(play, perf) {
-    switch (play.type) {
-      case 'tragedy':
-        thisAmount = 40000;
-        if (perf.audience > 30) {
-          thisAmount += 1000 * (perf.audience - 30);
-        }
-        break;
-      case 'comedy':
-        thisAmount = 30000;
-        if (perf.audience > 20) {
-          thisAmount += 10000 + 500 * (perf.audience - 20);
-        }
-        thisAmount += 300 * perf.audience;
-        break;
-      default:
-        throw new Error(`unknown type: ${play.type}`);
-    }
-    return thisAmount;
+}
+function getAmount(play, perf) {
+  switch (play.type) {
+    case 'tragedy':
+      thisAmount = 40000;
+      if (perf.audience > 30) {
+        thisAmount += 1000 * (perf.audience - 30);
+      }
+      break;
+    case 'comedy':
+      thisAmount = 30000;
+      if (perf.audience > 20) {
+        thisAmount += 10000 + 500 * (perf.audience - 20);
+      }
+      thisAmount += 300 * perf.audience;
+      break;
+    default:
+      throw new Error(`unknown type: ${play.type}`);
   }
+  return thisAmount;
+}
+
+function getLineResult(invoice, plays, result) {
+  for (let perf of invoice.performances) {
+    const play = plays[perf.playID];
+    const thisAmount = getAmount(play, perf);
+    result += ` ${play.name}: ${formatUsd(thisAmount)} (${perf.audience} seats)\n`;
+  }
+  return result;
 }
 
 function getVolumeCredits(invoice, plays, volumeCredits) {
