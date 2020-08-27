@@ -3,17 +3,22 @@ function statement(invoice, plays) {
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
   
-  for (let perf of invoice.performances) {
-    const play = plays[perf.playID];
-    const thisAmount = getAmount(play, perf);
-    totalAmount += thisAmount;
-  }
+  totalAmount = getTotalAmount(invoice, plays, totalAmount);
   result = getLineResult(invoice, plays, result);
   volumeCredits = getVolumeCredits(invoice, plays, volumeCredits);
   result += `Amount owed is ${formatUsd(totalAmount)}\n`;
   result += `You earned ${volumeCredits} credits \n`;
   return result;
 }
+function getTotalAmount(invoice, plays, totalAmount) {
+  for (let perf of invoice.performances) {
+    const play = plays[perf.playID];
+    const thisAmount = getAmount(play, perf);
+    totalAmount += thisAmount;
+  }
+  return totalAmount;
+}
+
 function getAmount(play, perf) {
   switch (play.type) {
     case 'tragedy':
