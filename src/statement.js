@@ -1,12 +1,17 @@
 function statement(invoice, plays) {
   let totalAmount = getTotalAmount(invoice, plays);
   let volumeCredits = getVolumeCredits(invoice, plays);
+  let result = getResult(invoice, plays, totalAmount, volumeCredits);
+  return result;
+}
+function getResult(invoice, plays, totalAmount, volumeCredits) {
   let result = `Statement for ${invoice.customer}\n`;
   result = getLineResult(invoice, plays, result);
   result += `Amount owed is ${formatUsd(totalAmount)}\n`;
   result += `You earned ${volumeCredits} credits \n`;
   return result;
 }
+
 function getTotalAmount(invoice, plays) {
   let totalAmount = 0;
   for (let perf of invoice.performances) {
