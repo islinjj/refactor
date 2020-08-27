@@ -23,22 +23,30 @@ function calculateTotalAmount(invoice, plays) {
 }
 
 function calculateAmount(play, perf) {
-  switch (play.type) {
-    case 'tragedy':
-      thisAmount = 40000;
-      if (perf.audience > 30) {
-        thisAmount += 1000 * (perf.audience - 30);
-      }
-      break;
-    case 'comedy':
-      thisAmount = 30000;
-      if (perf.audience > 20) {
-        thisAmount += 10000 + 500 * (perf.audience - 20);
-      }
-      thisAmount += 300 * perf.audience;
-      break;
-    default:
-      throw new Error(`unknown type: ${play.type}`);
+  let amountStrategy = {
+    'tragedy': () => getAmountOfTragedy(perf),
+    'comedy': () => getAmountOfComedy(perf)
+  }
+  return amountStrategy[play.type] == undefined ? throwUnknownException(play) : amountStrategy[play.type](perf);
+}
+
+function throwUnknownException(play) {
+  throw new Error(`unknown type: ${play.type}`);
+}
+
+function getAmountOfComedy(perf) {
+  let thisAmount = 30000;
+  if (perf.audience > 20) {
+    thisAmount += 10000 + 500 * (perf.audience - 20);
+  }
+  thisAmount += 300 * perf.audience;
+  return thisAmount;
+}
+
+function getAmountOfTragedy(perf) {
+  let thisAmount = 40000;
+  if (perf.audience > 30) {
+    thisAmount += 1000 * (perf.audience - 30);
   }
   return thisAmount;
 }
