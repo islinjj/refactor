@@ -1,9 +1,10 @@
 const { createStatementData } = require("./createStatementData");
 
 function statement(invoice, plays) {
-  return generateResult(createStatementData(invoice, plays));
+  return renderPlainText(createStatementData(invoice, plays));
 }
-function generateResult(data) {
+
+function renderPlainText(data) {
   let result = `Statement for ${data.customer}\n`;
   result = generatePerformResult(data, result);
   result += `Amount owed is ${formatUsd(data.totalAmount)}\n`;
