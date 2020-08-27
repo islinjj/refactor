@@ -88,7 +88,7 @@ const invoice = {
     'Amount owed is $410.00\n' +
     'You earned 1 credits \n');
 })
-test('should return owed 360 and 4 earned when statement given hamlet and 20 audience',t => {
+test('should return owed 360 and 4 earned when statement given as-like and 20 audience',t => {
 //given
 const invoice = {
     'customer': 'BigCo2',
