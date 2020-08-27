@@ -1,10 +1,9 @@
 function statement(invoice, plays) {
   let totalAmount = getTotalAmount(invoice, plays);
-  let volumeCredits = 0;
+  let volumeCredits = getVolumeCredits(invoice, plays);
   let result = `Statement for ${invoice.customer}\n`;
   result = getLineResult(invoice, plays, result);
   result += `Amount owed is ${formatUsd(totalAmount)}\n`;
-  volumeCredits = getVolumeCredits(invoice, plays, volumeCredits);
   result += `You earned ${volumeCredits} credits \n`;
   return result;
 }
@@ -48,7 +47,8 @@ function getLineResult(invoice, plays, result) {
   return result;
 }
 
-function getVolumeCredits(invoice, plays, volumeCredits) {
+function getVolumeCredits(invoice, plays) {
+  let volumeCredits = 0;
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
     volumeCredits += getCredit(perf, play);
