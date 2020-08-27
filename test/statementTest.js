@@ -107,3 +107,22 @@ const invoice = {
     'Amount owed is $360.00\n' +
     'You earned 4 credits \n');
 })
+test('should return owed 468 and 4 earned when statement given as-like and 21 audience',t => {
+//given
+const invoice = {
+    'customer': 'BigCo2',
+    'performances': [
+      {
+        'playID': 'as-like',
+        'audience': 21,
+      },
+    ],
+  };
+//when
+  const result = statement(invoice, plays);
+//then
+  t.is(result, 'Statement for BigCo2\n' +
+    ' As You Like It: $468.00 (21 seats)\n' +
+    'Amount owed is $468.00\n' +
+    'You earned 4 credits \n');
+})
