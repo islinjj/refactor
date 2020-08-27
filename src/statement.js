@@ -6,10 +6,7 @@ function statement(invoice, plays) {
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
     const thisAmount = getAmount(play, perf);
-    // add volume credits
-    volumeCredits += Math.max(perf.audience - 30, 0);
-    // add extra credit for every ten comedy attendees
-    if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
+    volumeCredits += getCredit(perf, play);
     //print line for this order
     result += ` ${play.name}: ${formatUsd(thisAmount)} (${perf.audience} seats)\n`;
     totalAmount += thisAmount;
@@ -40,13 +37,22 @@ function statement(invoice, plays) {
   }
 }
 
-function formatUsd(thisAmount) {
+function getCredit(perf, play) {
+  let credit = 0;
+  credit += Math.max(perf.audience - 30, 0);
+  // add extra credit for every ten comedy attendees
+  if ('comedy' === play.type)
+    credit += Math.floor(perf.audience / 5);
+  return credit;
+}
+
+function formatUsd(amount) {
   const format = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 2,
   }).format;
-  return format(thisAmount / 100);
+  return format(amount / 100);
 }
 
 module.exports = {
