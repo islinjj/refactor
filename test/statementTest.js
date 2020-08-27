@@ -1,5 +1,5 @@
 const test = require('ava');
-const { statement } = require('../src/statement');
+const { statement, htmlStatement } = require('../src/statement');
 
 const invoice = {
   'customer': 'BigCo',
@@ -172,7 +172,7 @@ test('should throw exception when statement given unknown plays', t => {
       },
     ],
   };
-  
+
   try {
     statement(invoice, plays);
     t.fail();
@@ -180,4 +180,36 @@ test('should throw exception when statement given unknown plays', t => {
   catch (e) {
     t.is(e.message, 'unknown type: tragedy1');
   }
+})
+test('should return html when statement given all performances', t => {
+  //given
+  const invoice = {
+    'customer': 'BigCo',
+    'performances': [
+      {
+        'playID': 'hamlet',
+        'audience': 55,
+      },
+      {
+        'playID': 'as-like',
+        'audience': 35,
+      },
+      {
+        'playID': 'othello',
+        'audience': 40,
+      },
+    ],
+  };
+  //when
+  const result = htmlStatement(invoice, plays);
+  //then
+  t.is(result, '<h1>Statement for BigCo</h1>\n' +
+    '<table>\n' +
+    '<tr><th>play</th><th>seats</th><th>cost</th></tr>\n' +
+    '<tr><td>hamlet</td><td>55</td></tr>\n' +
+    '<tr><td>as-like</td><td>35</td></tr>\n' +
+    '<tr><td>othello</td><td>40</td></tr>\n' +
+    '</table>\n' +
+    '<p>Amount owed is <em>$1,730.00</em></p>\n' +
+    '<p>You earned <em>47</em>credits</p>\n');
 })
