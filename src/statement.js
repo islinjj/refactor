@@ -6,11 +6,10 @@ function statement(invoice, plays) {
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
     const thisAmount = getAmount(play, perf);
-    volumeCredits += getCredit(perf, play);
-    //print line for this order
     result += ` ${play.name}: ${formatUsd(thisAmount)} (${perf.audience} seats)\n`;
     totalAmount += thisAmount;
   }
+  volumeCredits = getVolumeCredits(invoice, plays, volumeCredits);
   result += `Amount owed is ${formatUsd(totalAmount)}\n`;
   result += `You earned ${volumeCredits} credits \n`;
   return result;
@@ -35,6 +34,14 @@ function statement(invoice, plays) {
     }
     return thisAmount;
   }
+}
+
+function getVolumeCredits(invoice, plays, volumeCredits) {
+  for (let perf of invoice.performances) {
+    const play = plays[perf.playID];
+    volumeCredits += getCredit(perf, play);
+  }
+  return volumeCredits;
 }
 
 function getCredit(perf, play) {
