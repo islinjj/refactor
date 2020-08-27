@@ -4,6 +4,23 @@ function statement(invoice, plays) {
   return renderPlainText(createStatementData(invoice, plays));
 }
 
+function htmlStatement(invoice, plays) {
+  return renderHtml(createStatementData(invoice, plays));
+}
+
+function renderHtml(data) {
+  let result = `<h1>Statement for ${data.customer}</h1>\n`;
+  result += `<table>\n`;
+  result += `<tr><th>play</th><th>seats</th><th>cost</th></tr>\n`;
+  for (const perf of data.performances) {
+    result += `<tr><td>${perf.playID}</td><td>${perf.audience}</td></tr>\n`;
+  }
+  result += `</table>\n`;
+  result += `<p>Amount owed is <em>${formatUsd(data.totalAmount)}</em></p>\n`;
+  result += `<p>You earned <em>${data.volumeCredits}</em>credits</p>\n`
+  return result;
+}
+
 function renderPlainText(data) {
   let result = `Statement for ${data.customer}\n`;
   result = generatePerformResult(data, result);
@@ -60,6 +77,6 @@ function formatUsd(amount) {
 }
 
 module.exports = {
-  statement,
+  statement,htmlStatement
 };
 
